@@ -1,0 +1,77 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.container {
+    max-width: 800px; /* Ajusta según tu preferencia */
+    margin: 20px auto;
+    margin-top: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.box {
+    width: 45%;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    overflow: hidden;
+    position: relative;
+    text-align: center; /* Centrar contenido dentro de la caja */
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+    height: 160px; /* Altura del contenedor de imagen */
+}
+
+.image-container img {
+    max-width: 100%; /* Máximo ancho del 100% del contenedor */
+    height: auto; /* Ajusta según tu preferencia */
+    display: block;
+    margin: 0 auto; /* Centra horizontalmente la imagen */
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #B0D892;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.logo-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px; /* Tamaño del logo reducido */
+    height: 320px; /* Tamaño del logo reducido */
+    border: 4px solid #fff;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.logo-overlay img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: white;
+}
