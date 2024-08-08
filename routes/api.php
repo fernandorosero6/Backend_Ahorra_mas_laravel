@@ -52,6 +52,7 @@ Route::post('/consumo', [ConsumoController::class, 'store'])->name('api.consumo.
 Route::get('/consumo/{consumos}', [ConsumoController::class, 'show'])->name('api.consumo.show');
 Route::put('/consumo/{consumos}', [ConsumoController::class, 'update'])->name('api.consumo.update');
 Route::delete('/consumo/{consumos}', [ConsumoController::class, 'destroy'])->name('api.consumo.delete');
+// Route::get('/consumoData', [ConsumoController::class, 'pasarDataConsumo'])->name('api.pasarDataConsumo.index');
 
 
 Route::get('/simulador', [SimuladorController::class, 'index'])->name('api.simulador.index');

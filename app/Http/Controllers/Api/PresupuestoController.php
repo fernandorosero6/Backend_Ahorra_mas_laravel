@@ -43,9 +43,11 @@ class PresupuestoController extends Controller
         }else{
 
             $presupuesto = Presupuesto::create($request->all());
+            $presupuestoId = $presupuesto->id;
             $data = [
                 'message'    => 'se creo correctamente el presupuesto',
-                'presupuesto'=> $presupuesto
+                'presupuesto'=> $presupuesto,
+                'id del presupuesto crado' => $presupuestoId
             ];
             return response()->json($data, 200);
         }

@@ -135,4 +135,40 @@ class ConsumoController extends Controller
         }
 
     }
+
+    public function pasarDataConsumo()
+    {
+        $consumo = Consumo::all();
+        
+        if($consumo->isEmpty()){
+            //si esta vacio que devuelva datos para que quede llena las barras 
+            $data = [
+                'Contador1' => [12, 19, 3, 5, 2, 3], // Datos para la gráfica Contador1
+                'Contador2' => [10, 15, 7, 12, 8, 4], // Datos para la gráfica Contador2
+                'Contador3' => [8, 9, 10, 11, 5, 6]  // Datos para la gráfica Contador3
+            ];
+    
+            // Retorna los datos como una respuesta JSON
+            return response()->json($data);
+        }else{
+            $contador_id =[];
+            $consumo_m3 =[];
+            $consumo_pesos =[];
+
+            foreach ($consumo as $item){
+                $contador_id[] = $item->contador_id;
+                $consumo_m3[]  = $item->consumo_m3;
+                $consumo_pesos[] = $item ->consumo_pesos;
+            }
+            
+            $data = [
+                'consumo_id' => $contador_id,
+                'consumo_m3' => $consumo_m3,
+                'consumo_pesos' => $consumo_pesos
+            ];
+
+            return response()->json($data);
+
+        }
+    }
 }

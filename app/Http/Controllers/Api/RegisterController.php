@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Register;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -33,7 +34,7 @@ class RegisterController extends Controller
             'name'           => 'required|string|between:1,255',
             'lastName'       => 'required|string|between:1,255',
             'email'          => 'required|email|unique:register',
-            'identification' => 'required|digits_between:6,8', 
+            'identification' => 'required|unique:register|digits_between:8,10', 
             'password'       => 'required|string|between:8,15',
         ]);
 
@@ -46,8 +47,11 @@ class RegisterController extends Controller
             return response()->json($data, 400);
 
         }else{
+            //encripar la contraseña
+            $data = $request->all();
+            $data['password'] = Hash::make($request->input('password'));
 
-            $register = Register::create($request->all());
+            $register = Register::create($data);
             return response($register, 200);
             $data = [
                 'messege' => 'se creo correctamente el usuario', 
@@ -156,5 +160,6 @@ class RegisterController extends Controller
         }
 
     }
+
 
 }

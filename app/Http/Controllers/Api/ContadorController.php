@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Consumo;
 use App\Models\Contador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,19 +11,45 @@ use Illuminate\Support\Facades\Validator;
 class ContadorController extends Controller
 {
     public function index()
-    {
-        $contador = Contador::all();
-        
-        if($contador->isEmpty()){
-            $data = [
-                'message' => 'no existen contadores',
-                'status'  => 404
-            ];
-            return response($data, 404);
-        }else{
-           return response()->json($contador, 200) ;
-        }
+{
+    // Obtener los contadores
+    $contadores = Contador::all();
+
+    if ($contadores->isEmpty()) {
+        $data = [
+            'message' => 'No existen contadores',
+            'status' => 404
+        ];
+        return response()->json($data, 404);
     }
+
+    $consumos = Consumo::all();
+
+    //de aqui para abajo lo que hacemos es combinar los datos y filtrarlos por el id de cada contador
+    $datosCombinados = [];
+
+    foreach ($contadores as $contador) {
+        $idContador = $contador->id;
+        $nombreContador = $contador->nombre_contador;
+
+        $consumoContador = $consumos->filter(function ($consumo) use ($idContador) {
+            return $consumo->contador_id == $idContador;
+        });
+
+        $datosCombinados[] = [
+            'id' => $idContador,
+            'nombre_contador' => $nombreContador,
+            'consumos' => $consumoContador->map(function ($consumo) {
+                return [
+                    'consumo_m3' => $consumo->consumo_m3,
+                    'consumo_pesos' => $consumo->consumo_pesos,
+                ];
+            })
+        ];
+    }
+
+    return response()->json($datosCombinados, 200);
+}
 
     public function store(Request $request)
     {

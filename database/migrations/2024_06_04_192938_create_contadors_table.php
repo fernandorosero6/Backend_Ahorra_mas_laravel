@@ -20,11 +20,12 @@ return new class extends Migration
             $table->integer('estrato');
             $table->string('categoria');
             $table->integer('tarifa_agua');
-            $table->string('tarifa_alcantarillado');
+            $table->integer('tarifa_alcantarillado');
             $table->integer('ultimo_consumo');
             $table->string('fecha_proximo_pago');
             $table->boolean('estado')->nullable();
             $table->boolean('tipo_contador')->nullable();               
+                 
         
             // $table->unsignedBigInteger('user_id');
 
