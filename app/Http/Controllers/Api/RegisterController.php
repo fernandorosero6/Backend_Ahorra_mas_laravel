@@ -52,11 +52,14 @@ class RegisterController extends Controller
             $data['password'] = Hash::make($request->input('password'));
 
             $register = Register::create($data);
-            return response($register, 200);
-            $data = [
-                'messege' => 'se creo correctamente el usuario', 
+
+            // Retornar respuesta exitosa
+            $response = [
+                'message' => 'Se creó correctamente el usuario',
                 'status'  => 200
             ];
+
+            return response()->json($response, 200);
         }
     }
 
