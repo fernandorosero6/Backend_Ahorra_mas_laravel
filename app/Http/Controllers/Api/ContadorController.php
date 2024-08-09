@@ -11,34 +11,68 @@ use Illuminate\Support\Facades\Validator;
 class ContadorController extends Controller
 {
     public function index()
-    {
-        // Obtener los contadores con sus consumos relacionados
-        $contadores = Contador::with('consumos')->get();
-    
-        if ($contadores->isEmpty()) {
-            $data = [
-                'message' => 'No existen contadores',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-    
-        // Preparar los datos combinados
-        $datosCombinados = $contadores->map(function ($contador) {
-            return [
-                'id' => $contador->id,
-                'nombre_contador' => $contador->nombre_contador,
-                'consumos' => $contador->consumos->map(function ($consumo) {
-                    return [
-                        'consumo_m3' => $consumo->consumo_m3,
-                        'consumo_pesos' => $consumo->consumo_pesos,
-                    ];
-                })
-            ];
-        });
-    
-        return response()->json($datosCombinados, 200);
+{
+    // Obtener los contadores con sus consumos relacionados
+    $contadores = Contador::with('consumos')->get();
+
+    // Verificar si hay contadores
+    if ($contadores->isEmpty() || $contadores->every(function ($contador) {
+        return $contador->consumos->isEmpty();
+    })) {
+        // Datos de prueba si no hay datos en la base de datos
+        $datosDePrueba = [
+            [
+                'id' => 1,
+                'nombre_contador' => 'contador prueba 1',
+                'consumos' => [
+                    [
+                        'consumo_m3' => '10',
+                        'consumo_pesos' => '122.000'
+                    ]
+                ]
+            ],
+            [
+                'id' => 2,
+                'nombre_contador' => 'contador prueba 2',
+                'consumos' => [
+                    [
+                        'consumo_m3' => '10',
+                        'consumo_pesos' => '122.000'
+                    ]
+                ]
+            ],
+            [
+                'id' => 3,
+                'nombre_contador' => 'contador prueba 3',
+                'consumos' => [
+                    [
+                        'consumo_m3' => '10',
+                        'consumo_pesos' => '100.000'
+                    ]
+                ]
+            ]
+        ];
+
+        return response()->json($datosDePrueba, 200);
     }
+
+    // Preparar los datos combinados si hay datos en la base de datos
+    $datosCombinados = $contadores->map(function ($contador) {
+        return [
+            'id' => $contador->id,
+            'nombre_contador' => $contador->nombre_contador,
+            'consumos' => $contador->consumos->map(function ($consumo) {
+                return [
+                    'consumo_m3' => $consumo->consumo_m3,
+                    'consumo_pesos' => $consumo->consumo_pesos,
+                ];
+            })
+        ];
+    });
+
+    return response()->json($datosCombinados, 200);
+}
+    
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
