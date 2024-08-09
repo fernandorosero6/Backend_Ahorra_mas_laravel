@@ -16,4 +16,9 @@ class Consumo extends Model
         'consumo_m3',
         'consumo_pesos'
     ];
+
+    public function contador()
+    {
+        return $this->belongsTo(Contador::class);
+    }
 }

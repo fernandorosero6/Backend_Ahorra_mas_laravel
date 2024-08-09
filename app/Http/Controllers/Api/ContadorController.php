@@ -11,46 +11,34 @@ use Illuminate\Support\Facades\Validator;
 class ContadorController extends Controller
 {
     public function index()
-{
-    // Obtener los contadores
-    $contadores = Contador::all();
-
-    if ($contadores->isEmpty()) {
-        $data = [
-            'message' => 'No existen contadores',
-            'status' => 404
-        ];
-        return response()->json($data, 404);
-    }
-
-    $consumos = Consumo::all();
-
-    //de aqui para abajo lo que hacemos es combinar los datos y filtrarlos por el id de cada contador
-    $datosCombinados = [];
-
-    foreach ($contadores as $contador) {
-        $idContador = $contador->id;
-        $nombreContador = $contador->nombre_contador;
-
-        $consumoContador = $consumos->filter(function ($consumo) use ($idContador) {
-            return $consumo->contador_id == $idContador;
+    {
+        // Obtener los contadores con sus consumos relacionados
+        $contadores = Contador::with('consumos')->get();
+    
+        if ($contadores->isEmpty()) {
+            $data = [
+                'message' => 'No existen contadores',
+                'status' => 404
+            ];
+            return response()->json($data, 404);
+        }
+    
+        // Preparar los datos combinados
+        $datosCombinados = $contadores->map(function ($contador) {
+            return [
+                'id' => $contador->id,
+                'nombre_contador' => $contador->nombre_contador,
+                'consumos' => $contador->consumos->map(function ($consumo) {
+                    return [
+                        'consumo_m3' => $consumo->consumo_m3,
+                        'consumo_pesos' => $consumo->consumo_pesos,
+                    ];
+                })
+            ];
         });
-
-        $datosCombinados[] = [
-            'id' => $idContador,
-            'nombre_contador' => $nombreContador,
-            'consumos' => $consumoContador->map(function ($consumo) {
-                return [
-                    'consumo_m3' => $consumo->consumo_m3,
-                    'consumo_pesos' => $consumo->consumo_pesos,
-                ];
-            })
-        ];
+    
+        return response()->json($datosCombinados, 200);
     }
-
-    return response()->json($datosCombinados, 200);
-}
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[

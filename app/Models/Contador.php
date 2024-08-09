@@ -41,4 +41,10 @@ class Contador extends Model
     public function ReporteDaños(){
         return $this->belongsToMany(ReporteDaños::class, 'contador_reporte_daños', 'contador_id', 'reporte_daños_id');
     }
+
+
+    public function consumos()
+    {
+        return $this->hasMany(Consumo::class, 'contador_id');
+    }
 }
